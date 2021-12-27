@@ -59,7 +59,7 @@ Sub Export_Click()
             ReDim Preserve SheetArray(UBound(SheetArray) + 1)
             SheetArray(UBound(SheetArray)) = sheetName
         End If
-        
+
     Next SheetCounter
 
     ' データの出力
@@ -126,17 +126,17 @@ Sub Export_Click()
             maxRowCount = maxRowCount + 1
             workText = Worksheet.Cells(normalizedRowCounter + maxRowCount + 1, normalizedCollumnCounter + 1).value
         Wend
-        
+
         ' 構造体を構築するデータを収集、及びデータ配列を生成する
         collumnCounter = normalizedCollumnCounter + 1
         workText = Worksheet.Cells(normalizedRowCounter, collumnCounter).value
         While workText <> ""
-            
+
             ' 型・名前格納
             workTextArr = Split(workText, "\") ' 区切りの文字設定
             ReDim Preserve workTypeArray(UBound(workTypeArray) + 1)
             ReDim Preserve workTypeVariantArray(UBound(workTypeVariantArray) + 1)
-            
+
             ' 型を書き込む時に指定の文字を書き換える
             If workTextArr(0) = "string" Then
                 ' char型に変換する
@@ -149,6 +149,8 @@ Sub Export_Click()
 
             ' コメント格納
             workText = Worksheet.Cells(normalizedRowCounter - 1, collumnCounter).value
+
+
             ReDim Preserve workTypeCommentArray(UBound(workTypeCommentArray) + 1)
             workTypeCommentArray(UBound(workTypeArray)) = workText
 
@@ -167,7 +169,7 @@ Sub Export_Click()
             Wend
             ' データ配列に格納
             dataArray(collumnCounter - normalizedCollumnCounter - 1) = dataPeaceArray
-            
+
             collumnCounter = collumnCounter + 1
             workText = Worksheet.Cells(normalizedRowCounter, collumnCounter).value
         Wend
@@ -186,14 +188,14 @@ Sub Export_Click()
                 ' 書き込み
                 codeFile.WriteLine ("#include" & vbTab & """" & workText & ".h""")
             End If
-            
+
             If workText = "DirectX::XMFLOAT3" Then
                 codeFile.WriteLine ("#include" & vbTab & """" & "DirectXMath" & ".h""")
             End If
         Next WorkCounter
-        
-       
-        
+
+
+
         ' 構造体宣言
         codeFile.WriteLine (vbCrLf)
         codeFile.WriteLine (CommentPrefixStart)
@@ -243,13 +245,13 @@ Sub Export_Click()
             workByte = byteIntArray(collumnCounter)
             Put #1, , workByte
         Next collumnCounter
-        
+
         ' 文字列を書き込む
         For collumnCounter = 0 To UBound(dataTextByteArray)
             workByte = dataTextByteArray(collumnCounter)
             Put #1, , workByte
         Next collumnCounter
-        
+
         ' データを書き込む
         For rowCounter = 0 To maxRowCount - 1
             For collumnCounter = 0 To UBound(dataArray)
